@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:openDrawer="start">
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:fitsSystemWindows="true"/>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Navigation Drawer Demo"
+            app:titleTextColor="@color/cardview_light_background">
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="8dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/sprite_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+        <TextView
+            android:id="@+id/page_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/pubg"
+            android:text="Equipment"
+            android:textColor="#FFFFFF"
+            android:textSize="30dp"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="260dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/sprite_1"
+        android:id="@+id/navmenu"
+        app:menu="@menu/iconmenu"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/black"
+        app:itemBackground="@android:color/transparent"
+        app:itemTextAppearance="@style/ThemeOverlay.AppCompat.navTheme"
+        app:headerLayout="@layout/navheader"
+        android:layout_gravity="start" />
+</androidx.drawerlayout.widget.DrawerLayout>

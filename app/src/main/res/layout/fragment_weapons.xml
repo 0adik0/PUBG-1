@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/subcategories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        tools:itemCount="1"
+        android:paddingStart="16dp"
+        android:paddingBottom="24dp"
+        android:layout_gravity="top"
+        android:layout_marginBottom="50dp"
+        tools:listitem="@layout/subcategory_item" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        tools:itemCount="1"
+
+        android:layout_gravity="bottom"
+        tools:listitem="@layout/category_item" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
