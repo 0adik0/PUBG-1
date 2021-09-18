@@ -30,13 +30,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         isUserHasSubscription(this)
-        Handler().postDelayed({
 
-            /* Create an Intent that will start the Menu-Activity. */
-            val mainIntent = Intent(this@SplashActivity, Premium1Activity::class.java)
-            startActivity(mainIntent)
-            finish()
-        }, 500)
     }
 
     private fun setUpBillingClient() {
@@ -51,25 +45,24 @@ class SplashActivity : AppCompatActivity() {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
-                    Log.v("TAG_INAPP", "Setup Billing Done")
+                    Log.d("billing_process", "Setup Billing Done")
                     queryAvaliableProducts()
                 } else {
-
+                    Log.d("billing_process", "Error: ${billingResult.debugMessage}")
                 }
             }
 
             override fun onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
-                Log.v("TAG_INAPP", "Setup Billing disconnected")
+                Log.d("billing_process", "Setup Billing disconnected")
             }
         })
     }
 
     private fun queryAvaliableProducts() {
         val skuList = ArrayList<String>()
-        skuList.add("br.sub1")
-
+        skuList.add("com.battleroyale.subsc.newtop")
         val params = SkuDetailsParams.newBuilder()
         params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
 
@@ -77,23 +70,23 @@ class SplashActivity : AppCompatActivity() {
             // Process the result.
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && !skuDetailsList.isNullOrEmpty()) {
 
-                Log.v(
-                    "TAG_INAPP_data",
+                Log.d(
+                    "billing_process",
                     "skuDetailsList : ${skuDetailsList}; ${skuDetailsList.size}"
                 )
-                //initRecyclerView()
                 val filteredList = skuDetailsList.sortedBy { it.priceAmountMicros }
                 for (elements in  filteredList) {
-                    Log.v("TAG_INAPP_item", " $elements")
+                    Log.d("billing_process_item", " $elements")
                     runOnUiThread {
                         updateUI(elements)
                     }
 
                 }
+            } else {
+                Log.d("billing_process", "Error: ${billingResult.debugMessage} | ${billingResult.responseCode} | ${skuDetailsList?.size}")
             }
         }
     }
-
 
     private fun isUserHasSubscription(context: Context) {
         billingClient = BillingClient.newBuilder(this)
@@ -106,20 +99,28 @@ class SplashActivity : AppCompatActivity() {
                 billingClient!!.queryPurchaseHistoryAsync(
                     BillingClient.SkuType.SUBS
                 ) { billingResult1: BillingResult, list: List<PurchaseHistoryRecord?>? ->
-                    Log.d(
-                        "billingprocess",
-                        "purchasesResult.getPurchasesList():" + purchasesResult.purchasesList
-                    )
-                    if (billingResult1.responseCode == BillingClient.BillingResponseCode.OK &&
-                        Objects.requireNonNull(purchasesResult.purchasesList).isNotEmpty()
-                    ) {
+                    Log.d("billing_process", "res: ${billingResult1.responseCode}, ${list?.isNotEmpty()}")
+                    list?.forEach {
+                        Log.d("billing_process", "list: ${it}")
+                    }
+                    if (list != null) {
+                        if (billingResult1.responseCode == BillingClient.BillingResponseCode.OK && list.isNotEmpty()) {
 
-                        //here you can pass the user to use the app because he has an active subscription
-                        val myIntent = Intent(context, Premium1Activity::class.java)
-                        startActivity(myIntent)
+                            //here you can pass the user to use the app because he has an active subscription
+                            Handler().postDelayed({
+
+                                /* Create an Intent that will start the Menu-Activity. */
+                                val mainIntent = Intent(this@SplashActivity, Premium1Activity::class.java)
+                                startActivity(mainIntent)
+                                finish()
+                            }, 500)
+                        } else {
+                            setUpBillingClient()
+                        }
                     } else {
                         setUpBillingClient()
                     }
+
                 }
             }
 
@@ -140,7 +141,7 @@ class SplashActivity : AppCompatActivity() {
 
     private val purchaseUpdateListener =
         PurchasesUpdatedListener { billingResult, purchases ->
-            Log.v("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
+            Log.d("billing_process", "billingResult responseCode : ${billingResult.responseCode}")
 
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 for (purchase in purchases) {
@@ -155,7 +156,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
     private fun handleConsumedPurchases(purchase: Purchase) {
-        Log.d("TAG_INAPP", "handleConsumablePurchasesAsync foreach it is $purchase")
+        Log.d("billing_process", "handleConsumablePurchasesAsync foreach it is $purchase")
         val params =
             ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient?.consumeAsync(params) { billingResult, purchaseToken ->
@@ -165,7 +166,7 @@ class SplashActivity : AppCompatActivity() {
                     startActivity(myIntent)
                 }
                 else -> {
-                    Log.w("TAG_INAPP", billingResult.debugMessage)
+                    Log.d("billing_process", billingResult.debugMessage)
                 }
             }
         }
